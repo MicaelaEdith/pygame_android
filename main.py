@@ -3,6 +3,9 @@ import csv
 from settings import *
 from game_logic import Game
 from sound import load_sounds, play_sound, stop_sound
+import os
+os.environ["SDL_VIDEODRIVER"] = "android"
+
 
 def main():
     pygame.init()
