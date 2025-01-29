@@ -29,6 +29,8 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            if event.key == pygame.K_AC_BACK:
+                running = False
             if start_screen and event.type == pygame.MOUSEBUTTONDOWN:
                 if not check_sound_button(event, screen):
                     game.reset()
@@ -81,14 +83,14 @@ def main():
 
 def load_best_score():
     try:
-        with open('best_score.csv', 'r') as file:
+        with open('data/best_score.csv', 'r') as file:
             reader = csv.reader(file)
             return int(next(reader)[0])
     except (FileNotFoundError, ValueError):
         return 0
 
 def save_best_score(score):
-    with open('best_score.csv', 'w', newline='') as file:
+    with open('data/best_score.csv', 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow([score])
 
