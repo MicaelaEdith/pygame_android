@@ -5,12 +5,12 @@ pygame.mixer.init()
 
 def load_sounds():
     sounds = {
-        'start': pygame.mixer.Sound(os.path.abspath('sounds/gamestart-272829.mp3')),
-        'game_loop': pygame.mixer.Sound(os.path.abspath('sounds/8-bit-game-music-122259.mp3')),
-        'collision': pygame.mixer.Sound(os.path.abspath('sounds/retro-explode-1-236678.mp3')),
-        'special_item': pygame.mixer.Sound(os.path.abspath('sounds/8-bit-game-6-188105.mp3')),
-        'game_over': pygame.mixer.Sound(os.path.abspath('sounds/videogame-death-sound-43894.mp3')),
-        'new_record': pygame.mixer.Sound(os.path.abspath('sounds/win-sfx-38507.mp3'))
+        'start': pygame.mixer.Sound(os.path.join('sounds', 'gamestart-272829.mp3')),
+        'game_loop': pygame.mixer.Sound(os.path.join('sounds', '8-bit-game-music-122259.mp3')),
+        'collision': pygame.mixer.Sound(os.path.join('sounds', 'retro-explode-1-236678.mp3')),
+        'special_item': pygame.mixer.Sound(os.path.join('sounds', '8-bit-game-6-188105.mp3')),
+        'game_over': pygame.mixer.Sound(os.path.join('sounds', 'videogame-death-sound-43894.mp3')),
+        'new_record': pygame.mixer.Sound(os.path.join('sounds', 'win-sfx-38507.mp3'))
     }
     return sounds
 

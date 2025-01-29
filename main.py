@@ -1,19 +1,21 @@
-import pygame, time
+import pygame
+import time
 import csv
+import os
 from settings import *
 from game_logic import Game
 from sound import load_sounds, play_sound, stop_sound
-import os
+
 os.environ["SDL_VIDEODRIVER"] = "android"
 
 
 def main():
     pygame.init()
     screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-    SCREEN_SIZE = screen.get_size()
-    clock = pygame.time.Clock() 
+    screen_size = screen.get_size()
+    clock = pygame.time.Clock()
     sound_on = True
-    game = Game(screen, SCREEN_SIZE, sound_on)
+    game = Game(screen, screen_size, sound_on)
 
     best_score = load_best_score()
     new_record = False
@@ -27,15 +29,15 @@ def main():
 
     while running:
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT or (event.key == pygame.K_AC_BACK):
                 running = False
-            if event.key == pygame.K_AC_BACK:
-                running = False
+
             if start_screen and event.type == pygame.MOUSEBUTTONDOWN:
                 if not check_sound_button(event, screen):
                     game.reset()
                     start_screen = False
                     new_record = False
+
             if event.type == pygame.MOUSEBUTTONDOWN and check_sound_button(event, screen):
                 sound_on = not sound_on
                 if sound_on:
@@ -78,44 +80,49 @@ def main():
                 start_screen = True
                 stop_sound('start', sounds)
 
-
     pygame.quit()
 
+
 def load_best_score():
+    file_path = os.path.join('data', 'best_score.csv')
     try:
-        with open('data/best_score.csv', 'r') as file:
+        with open(file_path, 'r') as file:
             reader = csv.reader(file)
             return int(next(reader)[0])
     except (FileNotFoundError, ValueError):
         return 0
 
+
 def save_best_score(score):
-    with open('data/best_score.csv', 'w', newline='') as file:
+    file_path = os.path.join('data', 'best_score.csv')
+    with open(file_path, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow([score])
+
 
 def check_sound_button(event, screen):
     button_rect = pygame.Rect(screen.get_width() - 220, 10, 100, 50)
     return button_rect.collidepoint(event.pos)
 
+
 def display_start_screen(screen, best_score, new_record, sound_on):
-    font = pygame.font.Font(FONT_PATH,58)
-    font1 = pygame.font.SysFont(None,58)
+    font = pygame.font.Font(FONT_PATH, 58)
+    font1 = pygame.font.SysFont(None, 58)
 
     start_text = font.render("Tap to Start", True, (255, 255, 255))
-    best_score_text = font.render(f"Best Score: {best_score}" if not new_record else f"New Record: {best_score}", True, (255, 255, 255))
-    
+    best_score_text = font.render(
+        f"Best Score: {best_score}" if not new_record else f"New Record: {best_score}", True, (255, 255, 255)
+    )
     game_name_text = font.render("The Angle Hunter", True, (255, 255, 255))
-    
     move_text = font.render("touch screen for moves", True, (255, 255, 255))
-    
     sound_text = font1.render("Sound On" if sound_on else "Sound Off", True, (255, 255, 255))
-    
+
     screen.blit(start_text, (screen.get_width() // 2 - start_text.get_width() // 2, screen.get_height() // 3))
     screen.blit(best_score_text, (screen.get_width() // 2 - best_score_text.get_width() // 2, screen.get_height() // 2))
     screen.blit(game_name_text, (screen.get_width() // 2 - game_name_text.get_width() // 2, screen.get_height() // 4))
     screen.blit(move_text, (screen.get_width() // 2 - move_text.get_width() // 2, screen.get_height() - 60))
     screen.blit(sound_text, (screen.get_width() - 220, 10))
+
 
 if __name__ == "__main__":
     main()

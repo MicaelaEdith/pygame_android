@@ -1,5 +1,6 @@
 import pygame
 import random
+import os
 from settings import *
 from sound import play_sound, load_sounds
 
@@ -76,7 +77,7 @@ class Game:
         self.errors = ERROR_MARGIN
         self.font_size = SCORE_FONT_SIZE
         if self.hd : self.font_size += 17
-        self.font = pygame.font.Font(FONT_PATH,self.font_size)
+        self.font = pygame.font.Font(FONT_PATH, self.font_size)
         self.last_speed_increment = pygame.time.get_ticks()
         self.game_over = False
         self.enemy_speed = ENEMY_SPEED
@@ -86,6 +87,12 @@ class Game:
         self.last_tick = pygame.time.get_ticks()
 
         self.sounds = load_sounds()
+
+        self.csv_path = os.path.join(os.path.dirname(__file__), 'data', 'highscores.csv')
+
+        if not os.path.exists(self.csv_path):
+            with open(self.csv_path, 'w') as file:
+                file.write("Player,Score\n")
 
     def spawn_enemy(self):
         x = random.randint(0, self.screen_width - ENEMY_SIZE)
@@ -120,8 +127,6 @@ class Game:
                 if self.sound_on:
                     play_sound('collision', self.sounds)
 
-
-
     def update_special_items(self):
         for item in self.special_items[:]:
             item.update()
@@ -135,8 +140,6 @@ class Game:
                 self.special_items.remove(item)
                 if self.sound_on:
                     play_sound('special_item', self.sounds)
-
-
 
     def update(self, sound_on):
         self.sound_on = sound_on
@@ -156,7 +159,6 @@ class Game:
         self.update_special_items()
         self.check_collision()
 
-
         if pygame.time.get_ticks() - self.last_tick > SPEED_INCREMENT_INTERVAL:
             self.enemy_speed += 1
             self.level += 1
@@ -165,7 +167,6 @@ class Game:
             
             if self.level % 9 == 0:
                 self.enemy_count += 1
-
 
             for _ in range(additional_enemies):
                 self.spawn_enemy()
@@ -196,4 +197,4 @@ class Game:
         self.enemy_speed = ENEMY_SPEED
         self.enemy_count = 1
         self.level = 0
-        self.last_tick = pygame.time.get_ticks() 
+        self.last_tick = pygame.time.get_ticks()
